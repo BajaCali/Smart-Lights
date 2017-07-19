@@ -1,6 +1,6 @@
-# Smart-Lights
-###### Or also something else?
-Alows you to control your light at home from your coach.
+# Smart-Lights  
+###### Or also something else?  
+Allows you to control your light at home from your coach.
 ---
 ## The Goals
 * We would like to made a board with ESP32
