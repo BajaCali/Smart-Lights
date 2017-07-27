@@ -21,9 +21,9 @@
         - about 5 dm square  
 
 ## What have we done
-- Software
-    1.model
-        - ESP32 server, where you can turn two leds on and of
-        - good-looking, easy add more code and easy to modify code
-    2.model
-        - ESP32 server, where you can change mods of NeoPixels
+- Software  
+    1.model  
+        - ESP32 server, where you can turn two leds on and of  
+        - good-looking, easy add more code and easy to modify code  
+    2.model  
+        - ESP32 server, where you can change mods of NeoPixels  
