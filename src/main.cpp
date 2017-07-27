@@ -14,6 +14,8 @@
 #include <WiFi.h>
 
 #include "credentials.h"
+#include "pages.h"
+#include "color_circle.h"
 
 #include <esp_wifi.h>
 
@@ -29,7 +31,9 @@ WiFiServer server(80);
 
 // Client variables 
 char linebuf[80];
-int charcount=0;
+int charcount = 0;
+
+page current_page = MAIN;
 
 const int led1 =  26;      // the number of the LED pin
 const int led2 =  27;      // the number of the LED pin
@@ -38,12 +42,17 @@ void WiFi_setup();
 
 void setup() {
     Serial.begin(SERIAL_BAUDRATE);
-
-    pinMode(led1, OUTPUT);
-    pinMode(led2, OUTPUT);
+    // WiFi.begin(); 
+    // delay(1000);
+    // Serial.println("WiFi begined");
+    Serial.println("Starting...");
+    // pinMode(led1, OUTPUT);
+    // pinMode(led2, OUTPUT);
 
     WiFi_setup();
     server.begin();
+
+    color_circle_setup();
 }
 
 void loop(){
@@ -67,37 +76,37 @@ void loop(){
         // so you can send a reply
         if (c == '\n' && currentLineIsBlank) {
           // send a standard http response header
-          client.println("HTTP/1.1 200 OK");
-          client.println("Content-Type: text/html");
-          client.println("Connection: close");  // the connection will be closed after completion of the response
-          client.println();
-          client.println("<!DOCTYPE HTML><html><head>");
-          client.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"></head>");
-          client.println("<h1>ESP32 - Web Server</h1>");
-          client.println("<p>LED #1 <a href=\"on1\"><button>ON</button></a>&nbsp;<a href=\"off1\"><button>OFF</button></a></p>");
-          client.println("<p>LED #2 <a href=\"on2\"><button>ON</button></a>&nbsp;<a href=\"off2\"><button>OFF</button></a></p>");
-          client.println("</html>");
+          client.print(show_page(current_page));
           break;
         }
         if (c == '\n') {
           // you're starting a new line
           currentLineIsBlank = true;
-          if (strstr(linebuf,"GET /on1") > 0){
-            Serial.println("LED 1 ON");
-            digitalWrite(led1, HIGH);
+          if (strstr(linebuf,"GET /counter") > 0){
+            counter();
+            Serial.println("cnt++");
           }
-          else if (strstr(linebuf,"GET /off1") > 0){
-            Serial.println("LED 1 OFF");
-            digitalWrite(led1, LOW);
+          else if(strstr(linebuf,"GET /off") > 0){
+            LedBrs = 0;
+            cnt = 1;
+            Serial.println("off");
           }
-          else if (strstr(linebuf,"GET /on2") > 0){
-            Serial.println("LED 2 ON");
-            digitalWrite(led2, HIGH);
-          }
-          else if (strstr(linebuf,"GET /off2") > 0){
-            Serial.println("LED 2 OFF");
-            digitalWrite(led2, LOW);
-          }
+          // if (strstr(linebuf,"GET /on1") > 0){
+          //   Serial.println("LED 1 ON");
+          //   digitalWrite(led1, HIGH);
+          // }
+          // else if (strstr(linebuf,"GET /off1") > 0){
+          //   Serial.println("LED 1 OFF");
+          //   digitalWrite(led1, LOW);
+          // }
+          // else if (strstr(linebuf,"GET /on2") > 0){
+          //   Serial.println("LED 2 ON");
+          //   digitalWrite(led2, HIGH);
+          // }
+          // else if (strstr(linebuf,"GET /off2") > 0){
+          //   Serial.println("LED 2 OFF");
+          //   digitalWrite(led2, LOW);
+          // }
           // you're starting a new line
           currentLineIsBlank = true;
           memset(linebuf,0,sizeof(linebuf));
@@ -115,31 +124,30 @@ void loop(){
     client.stop();
     Serial.println("client disconnected");
   }
-    
+  color_circle_loop();
 }
 
 void WiFi_setup(){
-    pinMode(CONNECTED_LED, OUTPUT);
-    digitalWrite(CONNECTED_LED, 0);
-    WiFi.begin(); 
-    delay(1000);
+      pinMode(CONNECTED_LED, OUTPUT);
+      digitalWrite(CONNECTED_LED, 0);
 	WiFi.begin(ssid, password);	
-    oldhandler = esp_event_loop_set_cb( hndl, nullptr );
-    Serial.print("Connecting");
-    int stat = WiFi.status();
-    printf("\nStatus pred whilem: %d",stat);
+      Serial.println("Going up");
+      oldhandler = esp_event_loop_set_cb(hndl, nullptr);
+      Serial.print("Connecting");
+      int stat = WiFi.status();
+      printf("\nStatus pred whilem: %d",stat);
 	while (stat != WL_CONNECTED){
-        printf("\nStatus: %d",stat);
-		if (stat != WL_DISCONNECTED && stat != WL_CONNECTED){
-			WiFi.begin(ssid, password);
-			Serial.println("Reconnecting");
-		}
-		Serial.print(".");
-		delay(500);
-        stat = WiFi.status();
-    }
-    digitalWrite(CONNECTED_LED, 1);
-    printf("\nStatus po whilu: %d",stat);
+      printf("\nStatus: %d",stat);
+      if (stat != WL_DISCONNECTED && stat != WL_CONNECTED){
+          WiFi.begin(ssid, password);
+          Serial.println("Reconnecting");
+	    }
+	Serial.print(".");
+	delay(500);
+  stat = WiFi.status();
+  }
+  digitalWrite(CONNECTED_LED, 1);
+  printf("\nStatus po whilu: %d",stat);
 	Serial.print("\nConnected!\nIP address: ");
 	Serial.print(WiFi.localIP());
 }

@@ -1,0 +1,34 @@
+/* CSS Document */
+
+  
+  body {background: url("max.jpg"); background-size: cover; background-repeat: no-repeat; background-color: rgb(114,114,114); background-attachment: fixed; color: black; margin: 2%; font-size: 1.1rem}
+  h1 {font-family: Garamond; font-style: italic; font-size: 80px}
+  h2 {font-family: Garamond; font-style: italic; font-size: 50px}                    
+  a:link {color: rgba(255, 255, 255, 0.5)}
+  a:visited {color: rgb(210, 210, 210)}
+  a:hover {color: white}
+  
+  .tlacitka {border: 20px; border-style: solid; border-color: black; background-color: black; width: 100%}
+  .tlm {writing-mode: vertical-lr}
+  .obrtl {height: 110px}
+  .center {text-align: center}
+  
+  .str { font-weight: bold; text-align: center}
+  td.str a {background: white; border: 0.5em outset rgb(255,255,255); color: gray; text-decoration: none} 
+  td.str a:hover {border: 0.5em inset rgb(255,255,255); background: black; color: white; text-decoration: none}
+  
+  .strn { font-weight: bold; text-align: center}
+  td.strn a {background: white; border: 1em outset rgb(255,255,255); color: gray; text-decoration: none} 
+  td.strn a:hover {border: 1em inset rgb(255,255,255); background: gray; color: white; text-decoration: none}
+  
+  .nadpis {font-family: Garamond; font-style: italic; font-size: 40px}
+  hr {border: none; border-top: medium double white}
+  
+  .obr {width: 100%}
+  .podtext {text-align: center; vertical-align: top; height: 65px; font-size: 1.1rem;}
+  
+  #c {position: fixed; right: 0px; bottom: 0px; position: fixed; font-size: 0.8em; background-color: black;text-align: center; width: 100%; color: white}
+  #arklogosteam {float: left; width: 360px; margin: 10px}
+  #celek {margin: auto; width: 50%; background-color: rgba(255, 255, 255, 0.4); padding-top: 1px; padding-bottom: 20px; text-align: center}
+  #obsah {margin: auto; width: 90%; text-align: justify; padding-top: 20px;}
+  #nahoru {position: fixed; left: 15%; bottom: 15%; }
