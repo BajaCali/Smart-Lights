@@ -1,6 +1,6 @@
 #include <SmartLeds.h>
 
-const int LedPin = 32, NUM_LEDS = 12;
+const int LedPin = 32, NUM_LEDS = 60;
 
 int serialPrint = 1, H = 160, AH = 110, Px = 0, p = 0, DefBrs = 128, LedBrs = 155, S = 0, ABrs = 16 /*k fci breath*/, j = 1, /*k fci breath*/ /*k fci randomizer*/ x = AH /*k fci randomizer*/
   //BARVY hezka modra: H 160 B 155 S 255
@@ -8,7 +8,7 @@ int serialPrint = 1, H = 160, AH = 110, Px = 0, p = 0, DefBrs = 128, LedBrs = 15
 
 SmartLed leds( LED_WS2812, NUM_LEDS, LedPin, 0, DoubleBuffer );
 
-#include "funkce.h"
+#include "color_circle_funcions.h"
 
 volatile int cnt = 1;
 volatile unsigned long timeHigh; 
@@ -86,6 +86,10 @@ void Zmen_HSV(){
 void color_circle_loop() {
   Zmen_HSV();
   switch (cnt){
+    case 0:
+      LedBrs = 0;
+      Light(0);
+      break;
     case 1:
       NoColor();   Light(red);
       break;
