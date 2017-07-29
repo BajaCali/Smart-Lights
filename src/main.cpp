@@ -9,9 +9,13 @@
 #define SERIAL_BAUDRATE 115200
 
 #define CONNECTED_LED  13
+#define RESET_PIN 2
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <Arduino.h>
 #include <WiFi.h>
+#include <string> 
 
 #include "credentials.h"
 #include "color_circle.h"
@@ -33,6 +37,7 @@ WiFiServer server(80);
 char linebuf[80];
 int charcount = 0;
 
+void reset();
 void WiFi_setup();
 
 void setup() {
@@ -104,6 +109,10 @@ void WiFi_setup(){
       Serial.print("Connecting");
       int stat = WiFi.status();
       printf("\nStatus pred whilem: %d",stat);
+	  if(stat == 255){
+		  Serial.println("Restarting!!!");
+		  reset();
+	  }
 	while (stat != WL_CONNECTED){
       printf("\nStatus: %d",stat);
       if (stat != WL_DISCONNECTED && stat != WL_CONNECTED){
@@ -121,5 +130,6 @@ void WiFi_setup(){
 }
 
 void reset(){
-	
+	pinMode(RESET_PIN, OUTPUT);
+	digitalWrite(RESET_PIN, LOW);
 }
