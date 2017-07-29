@@ -115,6 +115,10 @@ String LEDS_page(){
     Page += "\n<a href=\"MAIN_page\"><button>MAIN Page</button></a>";
     Page += "\nMust Try! <a href=\"LEDS_configurator_page\"><button>Custom Configurator</button></a>";
     Page += "\n<h3>What a nice colours!</h3>";
+    Page += "\nMODE: ";
+    char tmp [3];
+    itoa(cnt, tmp, 10);
+    Page += tmp;
     Page += "\n<p>Change MODE or turn Off <a href=\"counter\"><button>CHANGE</button></a>&nbsp;<a href=\"off\"><button>OFF</button></a></p>";
     return Page;
 }

@@ -19,7 +19,7 @@ void PixelShadowRight() {
     p++;
     if (p > NUM_LEDS - 1)
       p -= NUM_LEDS;
-    leds[p] = Hsv(H + (2 * i), S, (LedBrs / NUM_LEDS) * i);
+    leds[p] = Hsv(H + i, S, (LedBrs / NUM_LEDS) * i);
   }
   leds.show();
   p++;
@@ -31,7 +31,7 @@ void PixelShadowLeft() {
     p--;
     if (p < 0)
       p += NUM_LEDS;
-    leds[p] = Hsv(H + (2 * i), S, (LedBrs / NUM_LEDS) * i);
+    leds[p] = Hsv(H + i, S, (LedBrs / NUM_LEDS) * i);
   }
   leds.show();
   p--;
@@ -39,6 +39,24 @@ void PixelShadowLeft() {
 }
 
                   /*PIXEL SHADOW*/
+
+void rainbow(int direction) { // direction -1 or +1
+  for (int i = 0; i < NUM_LEDS; i++) {
+    p += direction;
+    if (direction == -1){
+      if (p < 0)
+      p += NUM_LEDS;
+    }
+    else if (direction == 1){
+      if (p > NUM_LEDS - 1)
+        p -= NUM_LEDS;
+    }
+    leds[p] = Hsv(H + (256/NUM_LEDS * i), S, LedBrs);
+  }
+  leds.show();
+  p += direction;
+  delay(40);
+}
 
 void NoColor() {
   LedBrs = DefBrs;
@@ -70,8 +88,9 @@ void randomizer() {
   S = 255;
   if (H != x) {
     for (int i = 0; i < NUM_LEDS; i++) {
-      leds[i] = Hsv(H, S, LedBrs); leds.show();
+      leds[i] = Hsv(H, S, LedBrs);
     }
+    leds.show();
     if (H > 255){Serial.print("BUM");
       H = 0;
     }

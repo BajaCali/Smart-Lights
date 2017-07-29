@@ -178,6 +178,12 @@ void color_circle_loop() {
     case 29:
       randomizer();
       break;
+    case 30:
+      Color(); rainbow(-1); Speed2();
+      break;
+    case 31:
+      Color(); rainbow(1); Speed2();
+      break;
     default:
       cnt = 1;
       LedBrs = DefBrs;
