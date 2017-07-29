@@ -119,3 +119,7 @@ void WiFi_setup(){
 	Serial.print("\nConnected!\nIP address: ");
 	Serial.print(WiFi.localIP());
 }
+
+void reset(){
+	
+}

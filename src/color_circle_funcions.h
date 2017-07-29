@@ -1,3 +1,10 @@
+void Light_RGB(int R, int G, int B){
+    for (int i = 0; i < NUM_LEDS; i++) {
+    leds[i] = Rgb(R, G, B);
+    }
+    leds.show();
+}
+
 void Light(int Hue){
   for (int i = 0; i < NUM_LEDS; i++) {
     leds[i] = Hsv(Hue, S, LedBrs);

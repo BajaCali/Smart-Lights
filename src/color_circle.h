@@ -2,7 +2,7 @@
 
 const int LedPin = 32, NUM_LEDS = 60;
 
-int serialPrint = 1, H = 160, AH = 110, Px = 0, p = 0, DefBrs = 128, LedBrs = 155, S = 0, ABrs = 16 /*k fci breath*/, j = 1, /*k fci breath*/ /*k fci randomizer*/ x = AH /*k fci randomizer*/
+int serialPrint = 0, H = 160, AH = 110, Px = 0, p = 0, DefBrs = 128, LedBrs = 155, S = 0, ABrs = 16 /*k fci breath*/, j = 1, /*k fci breath*/ /*k fci randomizer*/ x = AH /*k fci randomizer*/
   //BARVY hezka modra: H 160 B 155 S 255
   ,red = 96, magenta = 128, blue = 160, cyan = 213, green = 0, yellow = 43;
 
