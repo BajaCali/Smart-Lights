@@ -4,14 +4,14 @@ const int LedPin = 32, NUM_LEDS = 60;
 
 int serialPrint = 0, H = 160, AH = 110, Px = 0, p = 0, DefBrs = 128, LedBrs = 155, S = 0, ABrs = 16 /*k fci breath*/, j = 1, /*k fci breath*/ /*k fci randomizer*/ x = AH /*k fci randomizer*/
   //BARVY hezka modra: H 160 B 155 S 255
-  ,red = 96, magenta = 128, blue = 160, cyan = 213, green = 0, yellow = 43;
+  ,red = 96, magenta = 128, blue = 160, cyan = 213, green = 0, yellow = 43, R = 0, G = 0, B = 0;
 
 SmartLed leds( LED_WS2812, NUM_LEDS, LedPin, 0, DoubleBuffer );
 
 #include "color_circle_funcions.h"
 
 volatile int cnt = 1;
-volatile unsigned long timeHigh; 
+volatile unsigned long timeHigh = 0; 
 volatile unsigned long minDifTime = 30;
 
 String ActualMode[] = {
@@ -91,6 +91,7 @@ void color_circle_loop() {
       Light(0);
       break;
     case 1:
+      LedBrs = DefBrs;
       NoColor();   Light(red);
       break;
     case 2:
@@ -183,6 +184,9 @@ void color_circle_loop() {
       break;
     case 31:
       Color(); rainbow(1); Speed2();
+      break;
+    case 101:
+      Light_RGB(R, G, B);
       break;
     default:
       cnt = 1;

@@ -9,13 +9,15 @@
 #define SERIAL_BAUDRATE 115200
 
 #define CONNECTED_LED  13
-#define RESET_PIN 2
+#define RESET_PIN 21
 
+#define _GLIBCXX_USE_C99 1
 #include <stdio.h>
 #include <stdlib.h>
 #include <Arduino.h>
 #include <WiFi.h>
-#include <string> 
+#include <string>
+#include <iostream> 
 
 #include "credentials.h"
 #include "color_circle.h"
@@ -42,6 +44,8 @@ void WiFi_setup();
 
 void setup() {
     Serial.begin(SERIAL_BAUDRATE);
+	pinMode(RESET_PIN, OUTPUT);
+	digitalWrite(RESET_PIN, HIGH);
     // WiFi.begin(); 
     // delay(1000);
     // Serial.println("WiFi begined");
@@ -71,6 +75,9 @@ void loop(){
 				// if you've gotten to the end of the line (received a newline
 				// character) and the line is blank, the http request has ended,
 				// so you can send a reply
+				if (c == '\n'){
+					switcher(current_page, linebuf);
+				}
 				if (c == '\n' && currentLineIsBlank) {
 					// send a standard http response header
 					client.print(show_page(current_page));
@@ -79,7 +86,6 @@ void loop(){
 				if (c == '\n') {
 					// you're starting a new 
 					currentLineIsBlank = true;
-					switcher(current_page, linebuf);
 					currentLineIsBlank = true;
 					memset(linebuf,0,sizeof(linebuf));
 					charcount=0;
@@ -101,16 +107,16 @@ void loop(){
 }
 
 void WiFi_setup(){
-      pinMode(CONNECTED_LED, OUTPUT);
-      digitalWrite(CONNECTED_LED, 0);
-	WiFi.begin(ssid, password);	
-      Serial.println("Going up");
+	pinMode(CONNECTED_LED, OUTPUT);
+	digitalWrite(CONNECTED_LED, 0);
+	WiFi.begin(ssid, password);
       oldhandler = esp_event_loop_set_cb(hndl, nullptr);
       Serial.print("Connecting");
       int stat = WiFi.status();
       printf("\nStatus pred whilem: %d",stat);
 	  if(stat == 255){
 		  Serial.println("Restarting!!!");
+		  fflush(stdout);
 		  reset();
 	  }
 	while (stat != WL_CONNECTED){
@@ -130,6 +136,5 @@ void WiFi_setup(){
 }
 
 void reset(){
-	pinMode(RESET_PIN, OUTPUT);
 	digitalWrite(RESET_PIN, LOW);
 }

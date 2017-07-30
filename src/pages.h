@@ -1,4 +1,3 @@
-
 typedef enum {
     MAIN = 1,
     LEDS = 2,
@@ -11,6 +10,7 @@ void main_switch(char* input);
 String main_page();
 void LEDS_switch(char* input);
 String LEDS_page();
+void LEDS_configurator_switch(char* input);
 String LEDS_configurator_page();
 String header();
 
@@ -53,6 +53,9 @@ void switcher(page page, char* input){
         case LEDS:
         LEDS_switch(input);
         break;
+        case LEDS_CONFIGURATOR:
+        LEDS_configurator_switch(input);
+        break;
     }
 }
 
@@ -82,7 +85,7 @@ void main_switch(char* input){
     }
     else if (strstr(input,"GET /LEDS") > 0){
         current_page = LEDS;
-        Serial.println("Going to LED_page");
+        Serial.println("Going to LEDS_page");
     }
     else if(strstr(input,"GET /off") > 0){
         Serial.println("off");
@@ -105,7 +108,7 @@ void LEDS_switch(char* input){
     }
     else if(strstr(input,"GET /off") > 0){
         LedBrs = 0;
-        cnt = 1;
+        cnt = 0;
         Serial.println("off");
     }
 }
@@ -123,18 +126,43 @@ String LEDS_page(){
     return Page;
 }
 
+void LEDS_configurator_switch(char* input){  // buffer: GET /LEDS_configurator_page?red=80&green=80&blue=80 HTTP/1.1
+    if((millis() - timeHigh) > minDifTime){
+        std::string config(input);
+        if (strstr(input, "red=") > 0){
+            size_t start_idx = config.find("red=")+4;
+            size_t end_idx = config.find("&green");
+            std::string red_str = config.substr(start_idx, end_idx);
+            R = std::stoi(red_str);
+
+            start_idx = config.find("green=")+6;
+            end_idx = config.find("&blue");
+            std::string green_str = config.substr(start_idx, end_idx);
+            G = std::stoi(green_str);
+
+            start_idx = config.find("blue=")+5;
+            end_idx = config.find(" HTTP");
+            std::string blue_str = config.substr(start_idx, end_idx);
+            B = std::stoi(blue_str);
+            printf("\n R = %d, G = %d, B = %d", R, G, B);
+            cnt = 101;
+        }
+    }
+    timeHigh = millis();
+}
+
 String LEDS_configurator_page(){
     String Page;
-    Page += "\n<a href=\"MAIN_page\"><button>MAIN Page</button></a><a href=\"LEDS_page\"><button>Back</button></a>";
+    Page += "\n<a href=\"MAIN_page\"><button>MAIN Page</button></a><a href=\"LEDS\"><button>Back</button></a>";
     Page += "\n<h3>What a nice colours!</h3>";
     Page += "\n<p>Set MODE <input><input type =\"submit\"></p>";
     Page += "<h5>RGB-LED PWM-Werte</h5>";
     Page += "<form><p2>";
-    Page += "<a style=\"width:38%;\"></a> <a style=\"width:20%;color: red\"> Rot</a>  <a style=\"width:15%;\" ><input name=\"rot\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"80\" ></a><a style=\"width:27%;\"> </a>";
-    Page += "<a style=\"width:38%;\"></a> <a style=\"width:20%;color: green\">Grün</a><a style=\"width:15%;\" ><input name=\"gruen\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"80\"></a><a style=\"width:27%;\"> </a>";
-    Page += "<a style=\"width:38%;\"></a> <a style=\"width:20%;color: blue\">Blau</a> <a style=\"width:15%;\" ><input name=\"blau\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"80\"></a><a style=\"width:27%;\"> </a>";
+    Page += "\n<a style=\"width:38%;\"></a> <a style=\"width:20%;color: red\"><b>RED</b></a>  <a style=\"width:15%;\" ><input name=\"red\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(R) + "\" ></a><a style=\"width:27%;\"> </a>";
+    Page += "\n<a style=\"width:38%;\"></a> <a style=\"width:20%;color: green\"><b>GREEN</b></a> <a style=\"width:15%;\" ><input name=\"green\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(G) + "\"></a><a style=\"width:27%;\"> </a>";
+    Page += "\n<a style=\"width:38%;\"></a> <a style=\"width:20%;color: blue\"><b>BLUE</b></a> <a style=\"width:15%;\" ><input name=\"blue\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(B) + "\"></a><a style=\"width:27%;\"> </a>";
     Page += "</p2>";
-    Page += "<p><a style=\"width:38%;\"></a> <a style=\"width:20%;\">         </a>   <label style=\"width:15%;\" ><input type=\"submit\" value=\"senden\"></label><a style=\"width:27%;\"></a></p>";
+    Page += "<p><a style=\"width:38%;\"></a> <a style=\"width:20%;\">         </a>   <label style=\"width:15%;\" ><input type=\"submit\" value=\"Send\"></label><a style=\"width:27%;\"></a></p>";
     Page += "</form>";
     return Page;
 }
