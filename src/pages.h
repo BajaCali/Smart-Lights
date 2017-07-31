@@ -126,26 +126,25 @@ String LEDS_page(){
     return Page;
 }
 
+int find_int_in_string(char* input, char* start, char* end){
+    std::string config(input);
+    size_t start_idx = config.find(start)+strlen(start);
+    size_t end_idx = config.find(end);
+    std::string red_str = config.substr(start_idx, end_idx);
+    return std::stoi(red_str);
+}
+
 void LEDS_configurator_switch(char* input){  // buffer: GET /LEDS_configurator_page?red=80&green=80&blue=80 HTTP/1.1
     if((millis() - timeHigh) > minDifTime){
-        std::string config(input);
         if (strstr(input, "red=") > 0){
-            size_t start_idx = config.find("red=")+4;
-            size_t end_idx = config.find("&green");
-            std::string red_str = config.substr(start_idx, end_idx);
-            R = std::stoi(red_str);
-
-            start_idx = config.find("green=")+6;
-            end_idx = config.find("&blue");
-            std::string green_str = config.substr(start_idx, end_idx);
-            G = std::stoi(green_str);
-
-            start_idx = config.find("blue=")+5;
-            end_idx = config.find(" HTTP");
-            std::string blue_str = config.substr(start_idx, end_idx);
-            B = std::stoi(blue_str);
+            R = find_int_in_string(input, "red=", "&green");
+            G = find_int_in_string(input, "green=", "&blue");
+            B = find_int_in_string(input, "blue=", " HTTP");
             printf("\n R = %d, G = %d, B = %d", R, G, B);
             cnt = 101;
+        }
+        if (strstr(input, "cnt=") > 0){
+            cnt = find_int_in_string(input, "cnt=", " HTTP");
         }
     }
     timeHigh = millis();
@@ -155,8 +154,8 @@ String LEDS_configurator_page(){
     String Page;
     Page += "\n<a href=\"MAIN_page\"><button>MAIN Page</button></a><a href=\"LEDS\"><button>Back</button></a>";
     Page += "\n<h3>What a nice colours!</h3>";
-    Page += "\n<p>Set MODE <input><input type =\"submit\"></p>";
-    Page += "<h5>RGB-LED PWM-Werte</h5>";
+    Page += "\n<form><p>Set MODE <input name=\"cnt\" type=\"number\" min=\"0\" max=\"31\" value=\"" + String(cnt) + "\"><input type=\"submit\" value=\"Send\"></p></form>";
+    Page += "<h5>RGB LED</h5>";
     Page += "<form><p2>";
     Page += "\n<a style=\"width:38%;\"></a> <a style=\"width:20%;color: red\"><b>RED</b></a>  <a style=\"width:15%;\" ><input name=\"red\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(R) + "\" ></a><a style=\"width:27%;\"> </a>";
     Page += "\n<a style=\"width:38%;\"></a> <a style=\"width:20%;color: green\"><b>GREEN</b></a> <a style=\"width:15%;\" ><input name=\"green\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(G) + "\"></a><a style=\"width:27%;\"> </a>";
