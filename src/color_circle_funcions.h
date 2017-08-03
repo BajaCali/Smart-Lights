@@ -40,6 +40,18 @@ void PixelShadowLeft() {
 
                   /*PIXEL SHADOW*/
 
+void PixelShadow_SolidColor(int direction) {
+  for (int i = 0; i < NUM_LEDS; i++) {
+    p--;
+    if (p < 0)
+      p += NUM_LEDS;
+    leds[p] = Hsv(H, S, (LedBrs / NUM_LEDS) * i);
+  }
+  leds.show();
+  p--;
+  delay(40);
+}
+
 void rainbow(int direction) { // direction -1 or +1
   for (int i = 0; i < NUM_LEDS; i++) {
     p += direction;

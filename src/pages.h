@@ -146,6 +146,13 @@ void LEDS_configurator_switch(char* input){  // buffer: GET /LEDS_configurator_p
         if (strstr(input, "cnt=") > 0){
             cnt = find_int_in_string(input, "cnt=", " HTTP");
         }
+        if (strstr(input, "hue=") > 0){
+            H = find_int_in_string(input, "hue=", "&saturate");
+            S = find_int_in_string(input, "saturate=", "&value");
+            LedBrs = find_int_in_string(input, "value=", " HTTP");
+            printf("\n R = %d, G = %d, B = %d", R, G, B);
+            cnt = 102;
+        }
     }
     timeHigh = millis();
 }
@@ -157,12 +164,24 @@ String LEDS_configurator_page(){
     Page += "\n<form><p>Set MODE <input name=\"cnt\" type=\"number\" min=\"0\" max=\"31\" value=\"" + String(cnt) + "\"><input type=\"submit\" value=\"Send\"></p></form>";
     Page += "<h5>RGB LED</h5>";
     Page += "<form><p2>";
-    Page += "\n<a style=\"width:38%;\"></a> <a style=\"width:20%;color: red\"><b>RED</b></a>  <a style=\"width:15%;\" ><input name=\"red\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(R) + "\" ></a><a style=\"width:27%;\"> </a>";
-    Page += "\n<a style=\"width:38%;\"></a> <a style=\"width:20%;color: green\"><b>GREEN</b></a> <a style=\"width:15%;\" ><input name=\"green\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(G) + "\"></a><a style=\"width:27%;\"> </a>";
-    Page += "\n<a style=\"width:38%;\"></a> <a style=\"width:20%;color: blue\"><b>BLUE</b></a> <a style=\"width:15%;\" ><input name=\"blue\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(B) + "\"></a><a style=\"width:27%;\"> </a>";
+    Page += "\n<a style=\"width:20%;color: red\"><b>RED</b></a>  <a style=\"width:15%;\" ><input name=\"red\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(R) + "\" ></a><a style=\"width:27%;\"> </a>";
+    Page += "\n<a style=\"width:20%;color: green\"><b>GREEN</b></a> <a style=\"width:15%;\" ><input name=\"green\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(G) + "\"></a><a style=\"width:27%;\"> </a>";
+    Page += "\n<a style=\"width:20%;color: blue\"><b>BLUE</b></a> <a style=\"width:15%;\" ><input name=\"blue\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(B) + "\"></a><a style=\"width:27%;\"> </a>";
     Page += "</p2>";
     Page += "<p><a style=\"width:38%;\"></a> <a style=\"width:20%;\">         </a>   <label style=\"width:15%;\" ><input type=\"submit\" value=\"Send\"></label><a style=\"width:27%;\"></a></p>";
     Page += "</form>";
+        Page += "<h5>HSV LED</h5>";
+    Page += "<form><p2>";
+    Page += "\n<a style=\"width:20%;><b>Hue</b></a>  <a style=\"width:15%;\" ><input name=\"hue\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(H) + "\" ></a><a style=\"width:27%;\"> </a>";
+    Page += "\n<a style=\"width:20%;><b>Saturate</b></a> <a style=\"width:15%;\" ><input name=\"saturate\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(S) + "\"></a><a style=\"width:27%;\"> </a>";
+    Page += "\n<a style=\"width:20%;><b>Value</b></a> <a style=\"width:15%;\" ><input name=\"value\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(LedBrs) + "\"></a><a style=\"width:27%;\"> </a>";
+    Page += "</p2>";
+    Page += "<p><a style=\"width:38%;\"></a> <a style=\"width:20%;\">         </a>   <label style=\"width:15%;\" ><input type=\"submit\" value=\"Send\"></label><a style=\"width:27%;\"></a></p>";
+    Page += "</form>";
+    // Page += "\n<h5>Config Modes</h5>";
+    // Page += "\n<form><p2>";
+    // Page += "\n<b>BRIGHTNESS</b> <input name=\"LedBrs\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(LedBrs) + "\"> <input type=\"submit\" value\"Send\">";
+    // Page += "\n
     return Page;
 }
 

@@ -188,6 +188,9 @@ void color_circle_loop() {
     case 101:
       Light_RGB(R, G, B);
       break;
+    case 102:
+      Light(H);
+      break;
     default:
       cnt = 1;
       LedBrs = DefBrs;
