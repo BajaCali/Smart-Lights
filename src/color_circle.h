@@ -6,6 +6,8 @@ int serialPrint = 0, H = 160, AH = 110, Px = 0, p = 0, DefBrs = 128, LedBrs = 15
   //BARVY hezka modra: H 160 B 155 S 255
   ,red = 96, magenta = 128, blue = 160, cyan = 213, green = 0, yellow = 43, R = 0, G = 0, B = 0;
 
+int con_RGBxHSV = 0, con_breath = 0, con_Color = 0;
+
 SmartLed leds( LED_WS2812, NUM_LEDS, LedPin, 0, DoubleBuffer );
 
 #include "color_circle_funcions.h"
@@ -44,14 +46,7 @@ String ActualMode[] = {
 
 
 void counter(){
-  // if(digitalRead(interruptPin) == LOW){
-  //   timeHigh = millis();
-  // }
-  // else{
-  //   if((millis() - timeHigh) > minDifTime){
     cnt++;  
-  //   }
-  // }
 }
 
 void color_circle_setup() {}
@@ -186,10 +181,14 @@ void color_circle_loop() {
       Color(); rainbow(1); Speed2();
       break;
     case 101:
-      Light_RGB(R, G, B);
-      break;
-    case 102:
-      Light(H);
+      if(con_RGBxHSV == 0)
+        Light_RGB(R, G, B);
+      else if (con_RGBxHSV ==1)
+        Light(H);
+      if (con_breath == 1)
+        tobreath(1);
+      if (con_Color == 1)
+        Color();
       break;
     default:
       cnt = 1;

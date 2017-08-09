@@ -136,12 +136,13 @@ int find_int_in_string(char* input, char* start, char* end){
 
 void LEDS_configurator_switch(char* input){  // buffer: GET /LEDS_configurator_page?red=80&green=80&blue=80 HTTP/1.1
     if((millis() - timeHigh) > minDifTime){
+        cnt = 101;
         if (strstr(input, "red=") > 0){
             R = find_int_in_string(input, "red=", "&green");
             G = find_int_in_string(input, "green=", "&blue");
             B = find_int_in_string(input, "blue=", " HTTP");
             printf("\n R = %d, G = %d, B = %d", R, G, B);
-            cnt = 101;
+            con_RGBxHSV = 0;
         }
         if (strstr(input, "cnt=") > 0){
             cnt = find_int_in_string(input, "cnt=", " HTTP");
@@ -151,7 +152,23 @@ void LEDS_configurator_switch(char* input){  // buffer: GET /LEDS_configurator_p
             S = find_int_in_string(input, "saturate=", "&value");
             LedBrs = find_int_in_string(input, "value=", " HTTP");
             printf("\n R = %d, G = %d, B = %d", R, G, B);
-            cnt = 102;
+            con_RGBxHSV = 1;
+        }
+        if (strstr(input, "GET /breath") > 0){
+            if (con_breath == 0)
+                con_breath = 1;
+            else
+                con_breath = 0;
+            if(con_RGBxHSV == 0)
+                con_RGBxHSV = 1;
+        }
+        if (strstr(input, "GET /color") > 0){
+            if (con_Color == 0)
+                con_Color = 1;
+            else
+                con_Color = 0;
+            if(con_RGBxHSV == 0)
+                con_RGBxHSV = 1;
         }
     }
     timeHigh = millis();
@@ -159,7 +176,7 @@ void LEDS_configurator_switch(char* input){  // buffer: GET /LEDS_configurator_p
 
 String LEDS_configurator_page(){
     String Page;
-    Page += "\n<a href=\"MAIN_page\"><button>MAIN Page</button></a><a href=\"LEDS\"><button>Back</button></a>";
+    Page += "\n<a href=\"MAIN_page\"><button>MAIN Page</button></a>&nbsp;<a href=\"LEDS\"><button>Back</button></a>";
     Page += "\n<h3>What a nice colours!</h3>";
     Page += "\n<form><p>Set MODE <input name=\"cnt\" type=\"number\" min=\"0\" max=\"31\" value=\"" + String(cnt) + "\"><input type=\"submit\" value=\"Send\"></p></form>";
     Page += "<h5>RGB LED</h5>";
@@ -178,6 +195,7 @@ String LEDS_configurator_page(){
     Page += "</p2>";
     Page += "<p><a style=\"width:38%;\"></a> <a style=\"width:20%;\">         </a>   <label style=\"width:15%;\" ><input type=\"submit\" value=\"Send\"></label><a style=\"width:27%;\"></a></p>";
     Page += "</form>";
+    Page += "\n<p><a href=\"breath\"><button>Breathing On/Off</button></a>&nbsp;<a href=\"color\"><button>Chaning Color On/Off</button></a></p>";
     // Page += "\n<h5>Config Modes</h5>";
     // Page += "\n<form><p2>";
     // Page += "\n<b>BRIGHTNESS</b> <input name=\"LedBrs\" type=\"number\" min=\"0\" max=\"255\" step=\"1\" value=\"" + String(LedBrs) + "\"> <input type=\"submit\" value\"Send\">";
